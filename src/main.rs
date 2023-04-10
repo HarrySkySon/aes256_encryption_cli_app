@@ -17,14 +17,28 @@ use std::io;
 use generic_array::GenericArray;
 
 // Replace this with your own key derivation method.
+/*
+1. This code is creating a function called password_to_key.
+2. This function takes an argument of a type &str, which is a reference to a string.
+3. The function will return an array of 32 bytes.
+4. The code then uses the sha2::Digest and sha2::Sha256 libraries.
+5. A hasher variable is initialized and it uses the Sha256 library to compute a hash of the password string.
+6. The result of the hasher is stored in a variable called result.
+7. A mutable array of 32 bytes called key is initialized and it initializes all bytes to 0.
+8. The key array is then copied from the result array using the copy_from_slice function.
+9. Finally, the key array is returned from the function.
+ */
 fn password_to_key(password: &str) -> [u8; 32] {
-    use sha2::{Digest, Sha256};
-    let mut hasher = Sha256::new();
-    hasher.update(password.as_bytes());
-    let result = hasher.finalize();
-    let mut key = [0u8; 32];
-    key.copy_from_slice(&result[..]);
-    key
+use sha2::{Digest, Sha256};
+if password.len() < 32 {
+    panic!("Password must be at least 32 bytes long!");
+}
+let mut hasher = Sha256::new();
+hasher.update(password.as_bytes());
+let result = hasher.finalize();
+let mut key = [0u8; 32];
+key.copy_from_slice(&result[..]);
+key
 }
 
 fn main() {
